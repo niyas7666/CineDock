@@ -1,0 +1,66 @@
+{
+  "name": "cinedock",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A Windows movie browser with embedded libVLC playback",
+  "license": "GPL-3.0-or-later",
+  "author": "Shahriar Ahmed Seam",
+  "main": "src/main.js",
+  "scripts": {
+    "build:native": "dotnet build native/VlcHost/VlcHost.csproj --configuration Debug",
+    "publish:native": "dotnet publish native/VlcHost/VlcHost.csproj --configuration Release --runtime win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=false --output native/VlcHost/publish/win-x64",
+    "make:icon": "powershell -NoProfile -ExecutionPolicy Bypass -File build/create-icon.ps1",
+    "stage:vlc": "powershell -NoProfile -ExecutionPolicy Bypass -File build/stage-vlc.ps1",
+    "start": "npm run build:native && electron .",
+    "check": "node --check src/main.js && node --check src/preload.js && node --check src/browser-preload.js && node --check src/renderer.js && dotnet build native/VlcHost/VlcHost.csproj --configuration Release",
+    "package": "npm run make:icon && npm run publish:native && npm run stage:vlc && electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "43.1.1",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.shahriarahmedseam.cinedock",
+    "productName": "CineDock",
+    "artifactName": "CineDock-Setup-${version}.${ext}",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "asar": true,
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "native/VlcHost/publish/win-x64",
+        "to": "VlcHost"
+      },
+      {
+        "from": "build/vlc",
+        "to": "vlc"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/cinedock.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "CineDock"
+    }
+  }
+}

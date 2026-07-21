@@ -1,0 +1,11 @@
+node_modules/
+release/
+installer/*.exe
+build/vlc/
+native/VlcHost/bin/
+native/VlcHost/obj/
+native/VlcHost/publish/
+server-index.html
+vlc-help.txt
+smoke-*.mjs
+*.log

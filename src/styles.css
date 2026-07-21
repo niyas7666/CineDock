@@ -1,0 +1,203 @@
+:root {
+  --title-h: 32px;
+  --nav-h: 42px;
+  --menu-h: 28px;
+  --dock-h: 94px;
+  --bg: #0b0c0e;
+  --chrome: #202329;
+  --chrome-dark: #191b20;
+  --surface: #292d34;
+  --surface-hover: #393e47;
+  --line: #3c414b;
+  --text: #e8ebef;
+  --muted: #9ba3af;
+  --orange: #ff8800;
+  --orange-hi: #ffa12e;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; }
+body {
+  margin: 0; overflow: hidden; min-width: 0; background: #000; color: var(--text);
+  font-family: "Segoe UI", Arial, sans-serif; font-size: 13px;
+  display: flex; flex-direction: column;
+}
+button, input { font: inherit; }
+button { color: inherit; cursor: pointer; }
+.hidden, .svg-defs { display: none !important; }
+svg { width: 18px; height: 18px; fill: currentColor; pointer-events: none; }
+
+#titlebar {
+  height: var(--title-h); flex: 0 0 var(--title-h); display: flex; align-items: center;
+  background: var(--chrome-dark); border-bottom: 1px solid #2c3037;
+  user-select: none; -webkit-app-region: drag;
+}
+.brand { display: flex; align-items: center; gap: 7px; padding-left: 10px; font-size: 12px; font-weight: 600; }
+.app-icon { width: 18px; height: 18px; }
+.window-title { flex: 1; min-width: 0; text-align: center; color: #b9c0ca; font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.window-buttons { height: 100%; display: flex; -webkit-app-region: no-drag; }
+.window-buttons button { width: 46px; border: 0; background: transparent; color: #c7ccd4; font-size: 15px; }
+.window-buttons button:hover { background: #353941; }
+.window-buttons .close:hover { background: #e81123; color: white; }
+
+#browserNav {
+  height: var(--nav-h); flex: 0 0 var(--nav-h); padding: 5px 9px;
+  display: flex; align-items: center; gap: 5px; background: var(--chrome); border-bottom: 1px solid var(--line);
+}
+.nav-button, .go-button {
+  height: 30px; min-width: 32px; border: 0; border-radius: 4px; background: transparent; color: #cfd4dc;
+}
+.nav-button { font-size: 18px; }
+.nav-button:hover, .go-button:hover { background: var(--surface-hover); }
+#address {
+  height: 30px; flex: 1; min-width: 80px; border: 1px solid #3b4049; border-radius: 4px;
+  padding: 0 10px; color: #e4e7eb; background: #111318;
+}
+#address:focus { outline: 1px solid var(--orange); border-color: var(--orange); }
+.go-button { padding: 0 12px; font-weight: 600; }
+
+.track-hints { display: flex; align-items: center; gap: 12px; padding: 0 6px; }
+.track-hint { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-size: 11px; white-space: nowrap; }
+.track-hint svg { width: 15px; height: 15px; opacity: .8; }
+.track-hint b { color: #dbe0e8; font-weight: 600; max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
+.track-hint kbd {
+  color: #1c1407; background: var(--orange); border-radius: 3px; padding: 1px 5px;
+  font: 700 9.5px "Segoe UI", sans-serif;
+}
+
+#stage { position: relative; z-index: 0; flex: 1 1 auto; min-height: 0; overflow: hidden; background: #000; }
+#browser, #videoStage { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
+#loadingOverlay {
+  position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 10px; color: var(--muted); background: #050505;
+}
+.loading-cone { color: var(--orange); font-size: 42px; animation: pulse 1s ease-in-out infinite alternate; }
+@keyframes pulse { to { opacity: .35; transform: scale(.94); } }
+
+/* VLC-style player dock */
+#playerDock {
+  position: relative; z-index: 10; isolation: isolate;
+  height: var(--dock-h); flex: 0 0 var(--dock-h); display: flex; flex-direction: column;
+  padding: 7px 10px 8px; background: var(--chrome); border-top: 1px solid var(--line); gap: 6px;
+}
+.timeline-row { height: 22px; display: flex; align-items: center; gap: 9px; }
+.time { width: 44px; flex: 0 0 44px; color: #bec5ce; font-variant-numeric: tabular-nums; font-size: 11px; }
+.end-time { text-align: right; }
+#seekBox { position: relative; height: 22px; flex: 1; display: flex; align-items: center; min-width: 40px; }
+#seekFill { position: absolute; left: 0; top: 9px; width: 0; height: 4px; border-radius: 2px; background: var(--orange); pointer-events: none; }
+input[type="range"] { appearance: none; -webkit-appearance: none; margin: 0; background: transparent; }
+input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 3px; background: #4a505c; }
+input[type="range"]::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 12px; height: 12px; margin-top: -4px; border-radius: 50%; border: 1px solid #ffb35d; background: var(--orange); }
+#timeline { position: relative; z-index: 1; width: 100%; }
+.control-row { height: 48px; display: flex; align-items: center; gap: 9px; min-width: 0; }
+.transport, .player-actions, .volume-control { display: flex; align-items: center; gap: 3px; min-width: 0; }
+.icon-button, .compact-button {
+  height: 34px; min-width: 34px; display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  border: 0; border-radius: 4px; color: #dce1e8; background: transparent;
+}
+.icon-button:hover, .compact-button:hover, .compact-button.active { background: var(--surface-hover); color: #fff; }
+.play-button { width: 39px; height: 39px; border-radius: 50%; color: #1c1407; background: var(--orange); }
+.play-button:hover { background: var(--orange-hi); color: #120e06; }
+.play-button svg { width: 20px; height: 20px; }
+.separator { width: 1px; height: 25px; margin: 0 4px; background: var(--line); }
+.media-summary { flex: 1; min-width: 70px; padding: 0 7px; text-align: center; overflow: hidden; }
+.now-playing { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #dfe4eb; font-size: 12px; }
+.media-detail { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 10.5px; margin-top: 2px; }
+.player-actions { margin-left: auto; }
+.compact-button { padding: 0 7px; white-space: nowrap; font-size: 11.5px; color: #cfd5de; }
+.text-button { min-width: 48px; }
+.track-button { max-width: 130px; overflow: hidden; }
+.track-button span { overflow: hidden; text-overflow: ellipsis; }
+.volume-control { gap: 5px; }
+.volume-control input { width: 74px; }
+#volLabel { width: 33px; color: #bfc6cf; font-size: 10.5px; font-variant-numeric: tabular-nums; }
+
+/* Context menus */
+.popup {
+  position: fixed; z-index: 30; min-width: 178px; max-width: min(330px, calc(100vw - 16px));
+  padding: 6px; border: 1px solid #464c58; border-radius: 5px; background: #252930; box-shadow: 0 10px 28px #000b;
+}
+.popup h3 { margin: 4px 7px 7px; color: #aeb6c2; font-size: 10.5px; font-weight: 600; letter-spacing: .3px; text-transform: uppercase; }
+.popup button { width: 100%; min-height: 30px; border: 0; border-radius: 3px; padding: 5px 8px; text-align: left; background: transparent; color: #e0e5ec; }
+.popup button:hover, .popup button.selected { background: #3c424d; }
+.popup button.selected { color: var(--orange-hi); }
+.popup button.selected::before { content: "● "; font-size: 9px; }
+.speed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.speed-grid button { text-align: center; }
+kbd { color: #9ba4b0; font: 10px "Segoe UI", sans-serif; }
+.adjustments { width: 250px; }
+.adjustments label { display: grid; grid-template-columns: 1fr auto; gap: 4px 9px; padding: 6px 8px; color: #dce1e8; font-size: 11.5px; }
+.adjustments output { color: var(--muted); font-size: 10.5px; }
+.adjustments input { grid-column: 1 / -1; width: 100%; }
+.reset-button { margin-top: 4px; color: #ffb15a !important; text-align: center !important; }
+.shortcut-help { width: 480px; }
+.shortcut-help > div { display: grid; grid-template-columns: 96px 1fr 65px 1fr; gap: 6px; padding: 5px 8px; color: #d5dbe3; font-size: 11px; }
+.shortcut-help kbd { color: var(--orange-hi); }
+.toast { position: fixed; z-index: 40; left: 50%; top: 76px; transform: translateX(-50%); padding: 8px 14px; border: 1px solid #ffffff2e; border-radius: 4px; background: #101216e8; color: #f5f7fa; font-size: 12px; pointer-events: none; }
+
+/* Mode visibility and fullscreen */
+.browser-mode #videoStage, .browser-mode #playerDock { display: none; }
+.player-mode #browserNav, .player-mode #browser { display: none; }
+.player-mode #videoStage, .player-mode #playerDock { display: flex; }
+.player-mode #videoStage { display: block; }
+.player-mode #playerDock { flex-direction: column; }
+.fullscreen #titlebar { display: none !important; }
+.fullscreen #playerDock { background: linear-gradient(to top, #070707f3, #111318e8); }
+.fullscreen.dock-hidden #playerDock { display: none !important; }
+.fullscreen.dock-hidden { cursor: none; }
+.fullscreen .toast { top: 25px; }
+
+/* Never let the dock clip: progressively remove secondary metadata. */
+@media (max-width: 1120px) {
+  .media-summary { display: none; }
+  .player-actions { margin-left: auto; }
+  .track-button { max-width: 105px; }
+}
+@media (max-width: 920px) {
+  .optional-control, #videoBtn .compact-button { display: none; }
+  #videoBtn { display: none; }
+  .track-button span { display: none; }
+  .track-button { min-width: 34px; }
+  .volume-control input { width: 55px; }
+  .separator { margin: 0 1px; }
+  .compact-button { padding: 0 5px; }
+}
+@media (max-width: 720px) {
+  :root { --dock-h: 86px; }
+  #volLabel, #speedBtn, #subBtn, .transport .separator { display: none; }
+  .volume-control input { width: 42px; }
+  .track-button { display: none; }
+  .time { width: 38px; flex-basis: 38px; }
+  .window-title { display: none; }
+}
+
+/* Audio/subtitle selectors expand inside the dock, never across the native video. */
+#playerDock.dock-expanded {
+  height: min(42vh, 310px);
+  flex-basis: min(42vh, 310px);
+}
+#playerDock .dock-popup {
+  position: static;
+  order: -1;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  max-height: calc(min(42vh, 310px) - var(--dock-h));
+  margin: 0 0 5px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-color: #4a515e;
+  box-shadow: none;
+}
+#playerDock .dock-popup.shortcut-help,
+#playerDock .dock-popup.adjustments { width: 100%; }
+#playerDock .dock-popup .speed-grid { grid-template-columns: repeat(4, 1fr); }
+#playerDock .dock-popup #audioList,
+#playerDock .dock-popup #subList {
+  max-height: calc(min(42vh, 310px) - 142px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+#playerDock .dock-popup button { min-height: 28px; }
+#playerDock.dock-expanded .timeline-row { flex: 0 0 22px; }
+#playerDock.dock-expanded .control-row { flex: 0 0 48px; }

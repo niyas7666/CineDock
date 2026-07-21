@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CineDock</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="browser-mode">
+  <svg class="svg-defs" aria-hidden="true">
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm12 1v10l-8-5z"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 7v10l8-5z"/></symbol>
+    <symbol id="i-frame" viewBox="0 0 24 24"><path d="M5 6h2v12H5zm4 1v10l8-5zm9-1h2v12h-2z"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zm11 1.1a3 3 0 010 3.8v2.4a6 6 0 000-8.6z"/></symbol>
+    <symbol id="i-muted" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zm11.5 1l1.8 1.8L19 10l1 1-1.8 1.8L20 14l-1 1-1.7-1.8-1.8 1.8-1-1 1.8-1.8-1.8-1.8z"/></symbol>
+    <symbol id="i-full" viewBox="0 0 24 24"><path d="M5 5h6v2H7v4H5zm8 0h6v6h-2V7h-4zM5 13h2v4h4v2H5zm12 0h2v6h-6v-2h4z"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M20 11H8l5-5-1.4-1.4L4.2 12l7.4 7.4L13 18l-5-5h12z"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10v2H4zm14 0h2v2h-2zM4 11h2v2H4zm6 0h10v2H10zM4 16h10v2H4zm14 0h2v2h-2z"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="17" r="2"/></symbol>
+    <symbol id="i-audio" viewBox="0 0 24 24"><path d="M12 4a8 8 0 00-8 8v5a3 3 0 003 3h2v-8H6a6 6 0 0112 0h-3v8h2a3 3 0 003-3v-5a8 8 0 00-8-8z"/></symbol>
+    <symbol id="i-sub" viewBox="0 0 24 24"><path d="M3 5h18v14H3zm2 2v10h14V7zm2 6h4v2H7zm6 0h4v2h-4zM7 9h6v2H7z"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><path d="M11 17h2v2h-2zm1-13a7 7 0 00-6.4 4.2l1.8.8A5 5 0 1112 17v-2a3 3 0 10-3-3H7a5 5 0 115 5z"/></symbol>
+  </svg>
+
+  <header id="titlebar">
+    <div class="brand"><img src="assets/cinedock.svg" alt="" class="app-icon"><span>CineDock</span></div>
+    <div id="windowTitle" class="window-title"></div>
+    <div class="window-buttons">
+      <button id="winMin" title="Minimize">—</button>
+      <button id="winMax" title="Maximize">□</button>
+      <button id="winClose" class="close" title="Close">×</button>
+    </div>
+  </header>
+
+  <nav id="browserNav">
+    <button id="browserBack" class="nav-button" title="Back">‹</button>
+    <button id="browserForward" class="nav-button" title="Forward">›</button>
+    <button id="reload" class="nav-button" title="Reload">↻</button>
+    <button id="home" class="nav-button" title="Home">⌂</button>
+    <input id="address" aria-label="Address" value="http://172.16.50.7/DHAKA-FLIX-7/">
+    <button id="go" class="go-button">Go</button>
+  </nav>
+
+  <main id="stage">
+    <webview id="browser" src="http://172.16.50.7/DHAKA-FLIX-7/" allowpopups></webview>
+    <div id="videoStage"></div>
+    <div id="loadingOverlay" class="hidden"><span class="loading-cone">▲</span><span>Opening media…</span></div>
+  </main>
+
+  <footer id="playerDock">
+    <div class="timeline-row">
+      <span id="currentTime" class="time">00:00</span>
+      <div id="seekBox">
+        <div id="seekFill"></div>
+        <input id="timeline" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+      </div>
+      <span id="duration" class="time end-time">00:00</span>
+    </div>
+
+    <div class="control-row">
+      <div class="transport">
+        <button id="backButton" class="icon-button" title="Back to browser (Esc)"><svg><use href="#i-back"/></svg></button>
+        <span class="separator"></span>
+        <button data-seek="-10" class="icon-button" title="Back 10 seconds (Left)"><svg><use href="#i-prev"/></svg></button>
+        <button id="playPause" class="icon-button play-button" title="Play/Pause (Space)"><svg><use href="#i-play"/></svg></button>
+        <button id="stopBtn" class="icon-button" title="Stop (S)"><svg><use href="#i-stop"/></svg></button>
+        <button data-seek="10" class="icon-button" title="Forward 10 seconds (Right)"><svg><use href="#i-next"/></svg></button>
+        <button id="frameBtn" class="icon-button optional-control" title="Next frame (E)"><svg><use href="#i-frame"/></svg></button>
+      </div>
+
+      <div class="media-summary">
+        <div id="nowPlaying" class="now-playing">No media</div>
+        <div id="mediaDetail" class="media-detail">VLC media engine</div>
+      </div>
+
+      <div class="player-actions">
+        <button id="videoBtn" class="compact-button" data-menu="videoMenu" title="Effects and filters"><svg><use href="#i-sliders"/></svg><span>Adjust</span></button>
+        <button id="speedBtn" class="compact-button text-button" data-menu="speedMenu" title="Playback speed">1.00×</button>
+        <div class="track-hints">
+          <span class="track-hint"><svg><use href="#i-audio"/></svg><b id="audioName">—</b><kbd>B</kbd></span>
+          <span class="track-hint"><svg><use href="#i-sub"/></svg><b id="subName">Off</b><kbd>V</kbd></span>
+        </div>
+        <span class="separator"></span>
+        <div class="volume-control">
+          <button id="mute" class="icon-button" title="Mute (M)"><svg><use href="#i-volume"/></svg></button>
+          <input id="volume" type="range" min="0" max="200" value="100" aria-label="Volume">
+          <span id="volLabel">100%</span>
+        </div>
+        <button id="fullscreen" class="icon-button" title="Fullscreen (F)"><svg><use href="#i-full"/></svg></button>
+      </div>
+    </div>
+  </footer>
+
+  <section id="speedMenu" class="popup hidden" aria-label="Playback speed">
+    <h3>Playback speed</h3>
+    <div class="speed-grid">
+      <button data-rate="0.25">0.25×</button><button data-rate="0.5">0.50×</button>
+      <button data-rate="0.75">0.75×</button><button data-rate="1">Normal</button>
+      <button data-rate="1.25">1.25×</button><button data-rate="1.5">1.50×</button>
+      <button data-rate="1.75">1.75×</button><button data-rate="2">2.00×</button>
+    </div>
+  </section>
+
+  <section id="videoMenu" class="popup adjustments hidden" aria-label="Video adjustments">
+    <h3>Effects and filters</h3>
+    <label><span>Brightness</span><output id="brightnessOut">100%</output><input data-adjust="brightness" type="range" min="0.25" max="2" value="1" step="0.05"></label>
+    <label><span>Contrast</span><output id="contrastOut">100%</output><input data-adjust="contrast" type="range" min="0.25" max="2" value="1" step="0.05"></label>
+    <label><span>Saturation</span><output id="saturationOut">100%</output><input data-adjust="saturation" type="range" min="0" max="3" value="1" step="0.05"></label>
+    <label><span>Gamma</span><output id="gammaOut">100%</output><input data-adjust="gamma" type="range" min="0.25" max="3" value="1" step="0.05"></label>
+    <button id="resetAdjust" class="reset-button">Reset adjustments</button>
+  </section>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="renderer.js"></script>
+</body>
+</html>
